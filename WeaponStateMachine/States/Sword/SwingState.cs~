@@ -1,0 +1,43 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+//[CreateAssetMenu(fileName = "SwingState", menuName = "SwordBaseClass/SwingState")]
+[System.Serializable]
+public class SwingState : WeaponBaseClass 
+{
+	public AudioSource weaponSound;
+	public Animator swordAnim;
+	
+	public float weaponRange;
+
+	public override void Enter(WeaponStateManager weapon)
+	{
+		returnCount = 0;
+		equipped = true;
+		Debug.Log("Now swinging!");
+		swordAnim = weapon.GetComponent<Animator>();
+		weaponSound = GameObject.Find("SwordSlash").GetComponent<AudioSource>();
+
+		swordAnim.SetTrigger("isEquipped");
+	}
+
+	public override void Do(WeaponStateManager weapon)
+	{
+		
+		if (Input.GetButtonDown("Fire1")) {
+			swordAnim.SetTrigger("fire");
+			weaponSound.Play();
+		}
+	
+		if (Input.GetButtonDown("Fire2")) {
+			weapon.SwitchState(weapon.projectile);
+		}
+		
+		Debug.Log(equipped);	
+		//Drop(weapon);	
+		if (Drop(weapon) == true) weapon.SwitchState(weapon.idle);
+	}
+	
+}
